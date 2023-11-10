@@ -44,31 +44,44 @@ char *convertir_infixe_postfixe(char expression[]) {
 
 char *convertir_infixe_postfixe_generalisee(char *expression) {
     char *resultat = calloc(strlen(expression), sizeof(char));
-    float c;
+    float c, stock;
     int j = 0;
     Pile *pile = creerPile();
+
 
     for (int i = 0; i < strlen(expression); i++) {
         c = expression[i];
 
         if ('0' <= c && c <= '9') resultat[j++] = (char) c;
-        else if (c == '(' || c == '+' || c == '-' || c == '*' || c == '/') {
-            empiler(pile, c);
-        } else if (c == ')') {
-            while (pile->tete->nombre == '+' || pile->tete->nombre == '-' || pile->tete->nombre == '*' ||
-                   pile->tete->nombre == '/') {
-                depiler(pile, &c);
-                resultat[j++] = (char) c;
+        else if(c == '(')   empiler(pile, (float) c);
+        else if(c == '+' || c == '-' || c == '*' || c == '/' ){
+            if(pile->tete && pile->tete->nombre == '(') empiler(pile, (float) c);
+            else{
+                if(c == '+' || c == '-'){
+                    while (pile->tete && (pile->tete->nombre == '*' || pile->tete->nombre == '/')){
+                        depiler(pile, &stock);
+                        resultat[j++] = (char) stock;
+                    }
+                }
+                empiler(pile, c);
             }
-            depiler(pile, NULL);
         }
-    }
-    while (pile->tete != NULL && (pile->tete->nombre == '+' || pile->tete->nombre == '-' || pile->tete->nombre == '*' ||
-                                  pile->tete->nombre == '/')) {
-        depiler(pile, &c);
-        resultat[j++] = (char) c;
-    }
-    depiler(pile, NULL);
+        else if(c == ')'){
+            while (1){
+                depiler(pile, &stock);
+                if((char)stock != '(')
+                    resultat[j++] = (char) stock;
+                else break;
+            }
+        }
+        
 
+    }
+
+    while(pile->tete){
+        depiler(pile, &stock);
+        resultat[j++] = (char) stock;
+    }
+    supprimerPile(&pile);
     return resultat;
 }
