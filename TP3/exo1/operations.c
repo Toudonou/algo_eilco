@@ -74,8 +74,6 @@ char *convertir_infixe_postfixe_generalisee(char *expression) {
                 else break;
             }
         }
-        
-
     }
 
     while(pile->tete){
