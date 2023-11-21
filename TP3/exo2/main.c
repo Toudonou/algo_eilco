@@ -1,5 +1,7 @@
 #include "file.h"
 
+float calculTempsMoyen(int taille, File *file);
+
 int main() {
     float tempsMoyen = 0;
     int taille = 10;
@@ -18,6 +20,14 @@ int main() {
         curseur1 = curseur1->suivant;
     }
 
+    printf("Temps d'attente moyen des clients dans cette file : %f", calculTempsMoyen(taille, file));
+    return 0;
+}
+
+float calculTempsMoyen(int taille, File *file) {
+    Client *curseur1 = NULL, *curseur2 = NULL;
+    float tempsMoyen = 0;
+
     curseur1 = file->tete;
     for (int i = 0; i < taille; i++) {
         float dureeTraitementPrecedent = 0;
@@ -30,7 +40,5 @@ int main() {
         curseur1 = curseur1->suivant;
     }
     tempsMoyen /= (float) taille;
-
-    printf("Temps d'attente moyen des clients dans cette file : %f", tempsMoyen);
-    return 0;
+    return tempsMoyen;
 }
