@@ -25,7 +25,7 @@ Client * creerElement(int id, float tempsArrive, float dureeTraitement);
 
 File *creerFile();
 
-void enfiler(File* file, int id, float tempsArrive, float dureeTraitement)
+void enfiler(File* file, int id, float tempsArrive, float dureeTraitement);
 
 void defiler(File *file);
 
