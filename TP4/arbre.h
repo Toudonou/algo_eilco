@@ -28,15 +28,7 @@ int maxArbre(Arbre *arbre);
 
 Arbre *recherche(Arbre *arbre, int cle);
 
-Arbre *trouvePere(Arbre *racine, Arbre *arbre, int cle);
-
-void suppression(Arbre **racine, int cle);
-
-void suppressionFeuille(Arbre **racine, int cle);
-
-void suppressionUnFils(Arbre **racine, int cle);
-
-void suppressionDeuxFils(Arbre **racine, int cle);
+Arbre* suppression(Arbre *racine, int cle);
 
 int taille(Arbre *arbre);
 

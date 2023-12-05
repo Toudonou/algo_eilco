@@ -46,8 +46,8 @@ int main(void){
 	arbre = insertion(arbre, 18);
 
 	func(arbre);
-
-	printf("%d\n", trouvePere(arbre, arbre, 9)->cle);
+	arbre = suppression(arbre, 20);
+	func(arbre);
 
 	return 0;
 }

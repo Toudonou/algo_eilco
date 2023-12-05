@@ -77,11 +77,8 @@ int maxArbre(Arbre *arbre){
 
 
 int taille(Arbre *arbre){
-	static int nombre = 0;
-	if(arbre) nombre++;
-	if(arbre && arbre->gauche) taille(arbre->gauche);
-	if(arbre && arbre->droit) taille(arbre->droit);
-	return nombre;
+	if(arbre) return 1 + taille(arbre->gauche) + taille(arbre->droit);
+	return 0;
 }
 
 
@@ -98,11 +95,11 @@ int hauteur(Arbre *arbre){
 
 
 int nbrFeuilles(Arbre *arbre){
-	static int nombre = 0;
-	if(arbre && !arbre->gauche && !arbre->droit) nombre++;
-	if(arbre && arbre->gauche) nbrFeuilles(arbre->gauche);
-	if(arbre && arbre->droit) nbrFeuilles(arbre->droit);
-	return nombre;
+	if(!arbre) return 0;
+	if(arbre){
+		if(!arbre->gauche && !arbre->droit) return 1;
+		return nbrFeuilles(arbre->gauche) + nbrFeuilles(arbre->droit); 
+	}
 }
 
 
@@ -116,21 +113,27 @@ Arbre *recherche(Arbre *arbre, int cle){
 }
 
 
-Arbre *trouvePere(Arbre *racine, Arbre *arbre, int cle){
-	if(arbre){
-		if(racine->cle == cle) return NULL;
-		if(arbre->cle > cle && arbre->gauche){
-			if(arbre->gauche->cle == cle) return arbre;
-			return trouvePere(racine, arbre->gauche, cle);
+Arbre* suppression(Arbre *racine, int cle){
+	if(racine == NULL) return racine;
+	if(racine->cle == cle){
+		if(racine->gauche == NULL){
+			Arbre *filsDroit = racine->droit;
+			free(racine);
+			return filsDroit;
 		}
-		else if(arbre->cle < cle && arbre->droit){
-			if(arbre->droit->cle == cle) return arbre;
-			return trouvePere(racine, arbre->droit, cle);
+		if(racine->droit == NULL){
+			Arbre *filsGauche = racine->gauche;
+			free(racine);
+			return filsGauche;
 		}
+
+		Arbre* s = recherche(racine->droit, minArbre(racine->droit));
+		
+		racine->cle = s->cle;
+		racine->droit = suppression(racine->droit, s->cle);
+		printf("\nfdkbdhvdvh\n");
 	}
-	return NULL;
-}
-void suppressionFeuille(Arbre **racine, int cle){
-	Arbre *pere = trouvePere(*racine, *racine, cle);
-	
+	if(cle < racine->cle) racine->gauche = suppression(racine->gauche, cle);
+	else racine->droit = suppression(racine->droit, cle);
+	return racine;
 }
