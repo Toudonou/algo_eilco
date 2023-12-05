@@ -131,7 +131,6 @@ Arbre* suppression(Arbre *racine, int cle){
 		
 		racine->cle = s->cle;
 		racine->droit = suppression(racine->droit, s->cle);
-		printf("\nfdkbdhvdvh\n");
 	}
 	if(cle < racine->cle) racine->gauche = suppression(racine->gauche, cle);
 	else racine->droit = suppression(racine->droit, cle);
