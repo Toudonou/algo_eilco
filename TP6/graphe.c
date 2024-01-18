@@ -4,6 +4,7 @@
 
 #include "graphe.h"
 #include "file.h"
+#include "pile.h"
 
 Graphe *creerGraphe(int nbrSommet) {
     Graphe *graphe = (Graphe *) malloc(sizeof(Graphe));
@@ -116,6 +117,14 @@ void ajoutArete(Graphe *graphe, char libelle1, char libelle2, int cout) {
     ajoutArc(graphe, libelle2, libelle1, cout);
 }
 
+void reinitialiserGraphe(Graphe *graphe){
+    if(graphe){
+        for (int i = 0; i < graphe->nbrSommet; i++) {
+            graphe->neouds[i]->couleur = BLANC;
+        }
+    }
+}
+
 void parcoursLargeur(Graphe *graphe, char libelle) {
     if (graphe) {
         if (0 <= (int) (libelle - 'a') && (int) (libelle - 'a') <= graphe->nbrSommet) {
@@ -125,7 +134,7 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
 
             graphe->neouds[(int) (libelle - 'a')]->couleur = GRIS;
             enfiler(file, creerNodeList(graphe->neouds[(int) (libelle - 'a')]));
-            printf("Parcour en largeur : ");
+
             while (file->taille) {
                 current = defiler(file);
                 curseurArc = current->element->arcs;
@@ -143,6 +152,8 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
                 curseurArc = NULL;
                 current = NULL;
             }
+            reinitialiserGraphe(graphe);
+            supprimerFile(file);
             printf("\n");
             return;
         }
@@ -153,12 +164,47 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
 }
 
 void parcoursProfondeur(Graphe *graphe, char libelle){
-    
+    if (graphe) {
+        if (0 <= (int) (libelle - 'a') && (int) (libelle - 'a') <= graphe->nbrSommet) {
+            Pile *pile = creerPile();
+            NodeList *current = NULL;
+            Arc *curseurArc = NULL;
+
+            graphe->neouds[(int) (libelle - 'a')]->couleur = GRIS;
+            empiler(pile, creerNodeList(graphe->neouds[(int) (libelle - 'a')]));
+
+            while (pile->taille) {
+                current = depiler(pile);
+                curseurArc = current->element->arcs;
+
+                while (curseurArc) {
+                    if (curseurArc->sommet->couleur == BLANC) {
+                        curseurArc->sommet->couleur = GRIS;
+                        empiler(pile, creerNodeList(curseurArc->sommet));
+                    }
+                    curseurArc = curseurArc->suivant;
+                }
+
+                printNodeList(current);
+                supprimerNodeList(current);
+                curseurArc = NULL;
+                current = NULL;
+            }
+            reinitialiserGraphe(graphe);
+            printf("\n");
+            supprimerPile(pile);
+            return;
+        }
+        printf("Sommet %c inexistant\n", libelle);
+        return;
+    }
+    printf("Graphe vide\n");
 }
 
-Sommet *sommetMin(Graphe *graphe, int *d);
 
-void dijkstra(Graphe *graphe, char libelle, int *d, int *pi);
+void dijkstra(Graphe *graphe, char libelle, int *d, int *pi){
+
+}
 
 void bellman(Graphe *graphe, char libelle, int *d, int *pi);
 
@@ -177,8 +223,6 @@ void afficherGraphe(Graphe *graphe) {
     }
     printf("Le graphe est vide\n");
 }
-
-void afficher(int *tab, int n);
 
 void supprimerGraphe(Graphe *graphe) {
     if (graphe) {

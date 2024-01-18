@@ -10,7 +10,7 @@
 
 typedef enum couleur {
     BLANC, GRIS, NOIR
-}COULEUR;
+} COULEUR;
 
 typedef struct arc Arc;
 
@@ -40,19 +40,17 @@ void ajoutArc(Graphe *graphe, char libelle1, char libelle2, int cout);
 
 void ajoutArete(Graphe *graphe, char libelle1, char libelle2, int cout);
 
+void reinitialiserGraphe(Graphe *graphe);
+
 void parcoursProfondeur(Graphe *graphe, char libelle);
 
 void parcoursLargeur(Graphe *graphe, char libelle);
-
-Sommet *sommetMin(Graphe *graphe, int *d);
 
 void dijkstra(Graphe *graphe, char libelle, int *d, int *pi);
 
 void bellman(Graphe *graphe, char libelle, int *d, int *pi);
 
 void afficherGraphe(Graphe *graphe);
-
-void afficher(int *tab, int n);
 
 void supprimerGraphe(Graphe *graphe);
 

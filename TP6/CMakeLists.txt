@@ -10,4 +10,6 @@ add_executable(TP6
         file.h
         nodeList.h
         nodeList.c
-        file.c)
+        file.c
+        pile.h
+        pile.c)
