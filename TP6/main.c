@@ -25,10 +25,10 @@ int main() {
     parcoursProfondeur(graphe, 'a');
     supprimerGraphe(graphe);
 
-    graphe = graphe3(5);
+    /*graphe = graphe3(5);
     printf("Dijkstra du graphe 3: ");
     //dijkstra(graphe, 'a');
-    supprimerGraphe(graphe);
+    supprimerGraphe(graphe);*/
 
     return 0;
 }

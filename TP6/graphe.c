@@ -41,7 +41,7 @@ Graphe *creerGraphe(int nbrSommet) {
 }
 
 Sommet *creerSommet(char libelle) {
-    Sommet * sommet = (Sommet *) malloc(sizeof(Sommet));
+    Sommet *sommet = (Sommet *) malloc(sizeof(Sommet));
     if (!sommet) {
         fprintf(stderr, "Error during nodeList allocation: %c\n", libelle);
         return NULL;
@@ -67,7 +67,7 @@ Arc *creerArc(Sommet *sommet) {
 
 void ajoutSommet(Graphe *graphe, char libelle) {
     if (graphe) {
-        Sommet * sommet = creerSommet(libelle);
+        Sommet *sommet = creerSommet(libelle);
         if (!sommet) {
             supprimerGraphe(graphe);
             exit(EXIT_FAILURE);
@@ -117,8 +117,8 @@ void ajoutArete(Graphe *graphe, char libelle1, char libelle2, int cout) {
     ajoutArc(graphe, libelle2, libelle1, cout);
 }
 
-void reinitialiserGraphe(Graphe *graphe){
-    if(graphe){
+void reinitialiserGraphe(Graphe *graphe) {
+    if (graphe) {
         for (int i = 0; i < graphe->nbrSommet; i++) {
             graphe->neouds[i]->couleur = BLANC;
         }
@@ -132,6 +132,7 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
             NodeList *current = NULL;
             Arc *curseurArc = NULL;
 
+            reinitialiserGraphe(graphe);
             graphe->neouds[(int) (libelle - 'a')]->couleur = GRIS;
             enfiler(file, creerNodeList(graphe->neouds[(int) (libelle - 'a')]));
 
@@ -146,15 +147,14 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
                     }
                     curseurArc = curseurArc->suivant;
                 }
-
+                current->element->couleur = NOIR;
                 printNodeList(current);
                 supprimerNodeList(current);
-                curseurArc = NULL;
-                current = NULL;
             }
-            reinitialiserGraphe(graphe);
+
             supprimerFile(file);
             printf("\n");
+            reinitialiserGraphe(graphe);
             return;
         }
         printf("Sommet %c inexistant\n", libelle);
@@ -163,36 +163,45 @@ void parcoursLargeur(Graphe *graphe, char libelle) {
     printf("Graphe vide\n");
 }
 
-void parcoursProfondeur(Graphe *graphe, char libelle){
+void parcoursProfondeur(Graphe *graphe, char libelle) {
     if (graphe) {
         if (0 <= (int) (libelle - 'a') && (int) (libelle - 'a') <= graphe->nbrSommet) {
             Pile *pile = creerPile();
             NodeList *current = NULL;
             Arc *curseurArc = NULL;
 
+            reinitialiserGraphe(graphe);
             graphe->neouds[(int) (libelle - 'a')]->couleur = GRIS;
             empiler(pile, creerNodeList(graphe->neouds[(int) (libelle - 'a')]));
 
             while (pile->taille) {
-                current = depiler(pile);
+                current = pile->tete;
                 curseurArc = current->element->arcs;
 
-                while (curseurArc) {
-                    if (curseurArc->sommet->couleur == BLANC) {
-                        curseurArc->sommet->couleur = GRIS;
-                        empiler(pile, creerNodeList(curseurArc->sommet));
+                if (current->element->couleur != NOIR) {
+                    if (curseurArc) {
+                        while (curseurArc) {
+                            if (curseurArc->sommet->couleur == BLANC) {
+                                curseurArc->sommet->couleur = GRIS;
+                                empiler(pile, creerNodeList(curseurArc->sommet));
+                            }
+                            curseurArc = curseurArc->suivant;
+                        }
+                        current->element->couleur = NOIR;
+                    } else {
+                        traitement:
+                        printNodeList(current);
+                        supprimerNodeList(depiler(pile));
                     }
-                    curseurArc = curseurArc->suivant;
+                } else {
+                    goto traitement;
                 }
-
-                printNodeList(current);
-                supprimerNodeList(current);
-                curseurArc = NULL;
-                current = NULL;
             }
-            reinitialiserGraphe(graphe);
+
             printf("\n");
             supprimerPile(pile);
+            reinitialiserGraphe(graphe);
+
             return;
         }
         printf("Sommet %c inexistant\n", libelle);
@@ -202,7 +211,7 @@ void parcoursProfondeur(Graphe *graphe, char libelle){
 }
 
 
-void dijkstra(Graphe *graphe, char libelle, int *d, int *pi){
+void dijkstra(Graphe *graphe, char libelle, int *d, int *pi) {
 
 }
 
